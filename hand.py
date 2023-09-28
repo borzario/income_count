@@ -31,17 +31,45 @@ async def add_income(cb: CallbackQuery, state: FSMContext):
 
 @dp.callback_query(StateFilter(Income.type_of_income))
 async def choose_income(cb: CallbackQuery, state: FSMContext):
-    await state.update_data(type=cb.data)
+    await state.update_data(user=int(cb.from_user.id))
+    await state.update_data(type_of=cb.data)
     await bot.send_message(cb.from_user.id, "how much")
     await state.set_state(Income.how_much)
 
 @dp.message(StateFilter(Income.how_much))
 async def choose_how_much(message: Message, state: FSMContext):
     await state.update_data(money=int(message.text))
-    await state.update_data(today=datetime.datetime.today())
+    await state.update_data(when_added=str(datetime.datetime.today().month))
     data = await state.get_data()
     await data_base.put_info_to_base(data)
     await bot.send_message(message.from_user.id, "Done", reply_markup=markups.ikb_main)
     await state.clear()
 
 
+class WatchIncome(StatesGroup):
+    month = State()
+    type = State()
+
+
+@dp.callback_query(F.data == "check_income")
+async def choose_month(cb: CallbackQuery, state: FSMContext):
+    await bot.send_message(cb.from_user.id, "What month?",
+                           reply_markup=markups.ikb_month)
+    await state.set_state(WatchIncome.month)
+
+
+@dp.callback_query(StateFilter(WatchIncome.month))
+async def choose_type(cb: CallbackQuery, state: FSMContext):
+    await state.update_data(user=int(cb.from_user.id))
+    await state.update_data(month=cb.data)
+    await bot.send_message(cb.from_user.id, "choose type of income", reply_markup=markups.ikb_types_of_income_for_get)
+    await state.set_state(WatchIncome.type)
+
+
+@dp.callback_query(StateFilter(WatchIncome.type))
+async def get_income(cb: CallbackQuery, state: FSMContext):
+    await state.update_data(type_of=cb.data)
+    data = await state.get_data()
+    money = await data_base.get_income(data)
+    await bot.send_message(cb.from_user.id, f"\n\nYou got {money} rub in chosen categories", reply_markup=markups.ikb_main)
+    await state.clear()
