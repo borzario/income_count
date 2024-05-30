@@ -1,8 +1,11 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
+TEXT_BUTTON_WRITE_TO_GPT = "Написать высшему разуму"
+
 b_add = InlineKeyboardButton(text="Add income", callback_data="add_income")
 b_check = InlineKeyboardButton(text="Check income", callback_data="check_income")
-ikb_main = InlineKeyboardMarkup(inline_keyboard=[[b_add], [b_check]])
+ikb_main = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text=TEXT_BUTTON_WRITE_TO_GPT, callback_data="cbdata")],
+                                                 [b_add], [b_check]])
 
 b_taro = InlineKeyboardButton(text="Taro", callback_data="taro")
 b_astro = InlineKeyboardButton(text="Astrologia", callback_data="astro")

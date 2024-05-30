@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  #=============================
+  # Параметры Postgres database
+  #=============================
+  database:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=user
+      - POSTGRES_DB=avito
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+  #========================
+  #       PGAdmin
+  #========================
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=user@example.com
+      - PGADMIN_DEFAULT_PASSWORD=user
+    ports:
+      - 8082:80
+    links:
+      - database:database
+
