@@ -4,8 +4,9 @@ from aiogram.fsm.storage.memory import MemoryStorage
 import control_info
 from engine import engine
 from models import Base
+from storage import PGSQLStorage
 
-storage = MemoryStorage()
+storage = PGSQLStorage(engine)
 bot = Bot(token=control_info.TOKEN)
 dp = Dispatcher(storage=storage)
 
@@ -20,7 +21,7 @@ def on_startup():
 if __name__ == "__main__":
     on_startup()
 
-    Base.metadata.drop_all(engine)
+    #Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
 
     dp.run_polling(bot)

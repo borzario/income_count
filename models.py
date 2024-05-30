@@ -25,7 +25,7 @@ class User(Base):
     id                    = Column(Integer(),
                                    primary_key=True)
     telegram_id      = Column(BigInteger(),
-                                   )
+                                   unique=True)
     state                 = Column(  # Состояние
         Text(),
         nullable=False
@@ -33,8 +33,7 @@ class User(Base):
 
 
 class Context(Base):
-    pass
-    """__tablename__ = 'context'
+    __tablename__ = 'context'
 
     id                  = Column(
                             Integer(),
@@ -55,4 +54,4 @@ class Context(Base):
 
     __table_args__ = (
         UniqueConstraint('telegram_user_id', 'key', name='unique_cotext'),
-    )"""
+    )

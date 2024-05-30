@@ -19,7 +19,7 @@ async def gpt(message: Message):
             j = i % 6
             response = client.chat.completions.create(
                 model=models[j],
-                messages=msgs + [{"role": "user", "content": message.text}], )
+                messages=msgs + [{"role": f"user-{message.from_user.id}", "content": message.text}], )
 
             if response.choices[0].message.content != "当前地区当日额度已消耗完, 请尝试更换网络环境":
                 temp = False
@@ -31,7 +31,7 @@ async def gpt(message: Message):
             print(err)
             continue
 
-    add_uam(message.from_user.id, {"role": "user", "content": message.text})
+    add_uam(message.from_user.id, {"role": f"user-{message.from_user.id}", "content": message.text})
 
     add_uam(message.from_user.id, {"role": response.choices[0].message.role, "content": response.choices[0].message.content})
 
