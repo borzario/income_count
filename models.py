@@ -32,8 +32,9 @@ class User(Base):
     )
 
 
-"""class Context(Base):
-    __tablename__ = 'context'
+class Context(Base):
+    pass
+    """__tablename__ = 'context'
 
     id                  = Column(
                             Integer(),
